@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.cthawanapong.flexibleadapter.R
+import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleEmptyViewHolder
+import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleErrorViewHolder
+import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleLoadingViewHolder
 import com.github.cthawanapong.flexibleadapter.model.FlexibleViewType
 import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleAdapterFunction
 import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleErrorCallback
 import com.github.cthawanapong.flexibleadapter.model.interfaces.IFlexibleViewType
-import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleEmptyViewHolder
-import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleErrorViewHolder
-import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleLoadingViewHolder
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.actor
@@ -23,7 +23,7 @@ import kotlinx.coroutines.experimental.launch
  * Created by CThawanapong on 30/1/2018 AD.
  * Email: c.thawanapong@gmail.com
  */
-abstract class FlexibleAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FlexibleAdapterFunction, FlexibleErrorCallback {
+abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FlexibleAdapterFunction, FlexibleErrorCallback {
     companion object {
         @JvmStatic
         private val TAG = FlexibleAdapter::class.java.simpleName
