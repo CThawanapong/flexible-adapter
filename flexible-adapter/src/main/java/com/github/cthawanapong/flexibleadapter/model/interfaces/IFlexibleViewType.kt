@@ -1,4 +1,4 @@
-package com.github.cthawanapong.flexibleadapter.adapter.model.interfaces
+package com.github.cthawanapong.flexibleadapter.model.interfaces
 
 /**
  * Created by CThawanapong on 30/1/2018 AD.

@@ -1,4 +1,4 @@
-package com.github.cthawanapong.flexibleadapter.adapter.model.interfaces
+package com.github.cthawanapong.flexibleadapter.model.interfaces
 
 import android.view.View
 

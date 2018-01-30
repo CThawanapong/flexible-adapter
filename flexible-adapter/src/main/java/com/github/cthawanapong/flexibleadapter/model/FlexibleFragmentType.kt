@@ -1,6 +1,6 @@
-package com.github.cthawanapong.flexibleadapter.adapter.model
+package com.github.cthawanapong.flexibleadapter.model
 
-import com.github.cthawanapong.flexibleadapter.adapter.model.interfaces.IFlexibleFragmentType
+import com.github.cthawanapong.flexibleadapter.model.interfaces.IFlexibleFragmentType
 
 /**
  * Created by CThawanapong on 30/1/2018 AD.

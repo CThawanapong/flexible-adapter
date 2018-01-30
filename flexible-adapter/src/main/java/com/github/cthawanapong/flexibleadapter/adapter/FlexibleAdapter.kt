@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.cthawanapong.flexibleadapter.R
-import com.github.cthawanapong.flexibleadapter.adapter.model.FlexibleViewType
-import com.github.cthawanapong.flexibleadapter.adapter.model.interfaces.FlexibleAdapterFunction
-import com.github.cthawanapong.flexibleadapter.adapter.model.interfaces.FlexibleErrorCallback
-import com.github.cthawanapong.flexibleadapter.adapter.model.interfaces.IFlexibleViewType
+import com.github.cthawanapong.flexibleadapter.model.FlexibleViewType
+import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleAdapterFunction
+import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleErrorCallback
+import com.github.cthawanapong.flexibleadapter.model.interfaces.IFlexibleViewType
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleEmptyViewHolder
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleErrorViewHolder
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleLoadingViewHolder
