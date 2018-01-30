@@ -11,8 +11,8 @@ bintray {
 
     configurations = ['archives']
     pkg {
-        repo = 'flexible-adpater'
-        name = 'flexible-adpater'
+        repo = 'flexible-adapter'
+        name = 'flexible-adapter'
         desc = 'Base customisable recyclerview adapter'
         websiteUrl = 'https://github.com/CThawanapong/flexible-adapter'
         issueTrackerUrl = 'https://github.com/CThawanapong/flexible-adapter/issues'
