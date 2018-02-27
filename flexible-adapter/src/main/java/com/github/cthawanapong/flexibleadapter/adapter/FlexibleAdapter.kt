@@ -29,18 +29,12 @@ abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<Recy
         private val TAG = FlexibleAdapter::class.java.simpleName
 
         //Static Members
-        @JvmStatic
-        val VIEW_TYPE_ID_DIVIDER_PADDING: Int = 500
-        @JvmStatic
-        val VIEW_TYPE_ID_DIVIDER: Int = 501
-        @JvmStatic
-        val VIEW_TYPE_ID_LOADING: Int = 502
-        @JvmStatic
-        val VIEW_TYPE_ID_LOADING_ITEM: Int = 503
-        @JvmStatic
-        val VIEW_TYPE_ID_ERROR: Int = 504
-        @JvmStatic
-        val VIEW_TYPE_ID_EMPTY: Int = 505
+        const val VIEW_TYPE_ID_DIVIDER_PADDING: Int = 500
+        const val VIEW_TYPE_ID_DIVIDER: Int = 501
+        const val VIEW_TYPE_ID_LOADING: Int = 502
+        const val VIEW_TYPE_ID_LOADING_ITEM: Int = 503
+        const val VIEW_TYPE_ID_ERROR: Int = 504
+        const val VIEW_TYPE_ID_EMPTY: Int = 505
     }
 
     //Expose Members

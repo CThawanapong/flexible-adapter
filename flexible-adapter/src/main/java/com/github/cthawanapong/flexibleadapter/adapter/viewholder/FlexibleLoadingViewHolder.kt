@@ -1,10 +1,12 @@
 package com.github.cthawanapong.flexibleadapter.adapter.viewholder
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.util.TypedValue
 import android.view.View
 import android.widget.ProgressBar
 import com.github.cthawanapong.flexibleadapter.R
@@ -18,6 +20,9 @@ class FlexibleLoadingViewHolder(private val context: Context, itemView: View) : 
     companion object {
         @JvmStatic
         private val TAG = FlexibleLoadingViewHolder::class.java.simpleName
+
+        @JvmStatic
+        private val FALLBACK_COLOR = Color.parseColor("#FF000000")
     }
 
     init {
@@ -35,13 +40,20 @@ class FlexibleLoadingViewHolder(private val context: Context, itemView: View) : 
         }
     }
 
+    @SuppressLint("ResourceType")
     private fun fetchColorAccentDark(context: Context): Int {
-        val typedValue = TypedValue()
+        val theme = context.theme
+        val attr = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            android.R.attr.colorAccent
+        } else {
+            R.attr.flexibleLoadingIndicatorColor
+        }
 
-        val a = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.flexibleLoadingIndicatorColor))
-        val color = a.getColor(0, 0)
-        a.recycle()
+        val typedArray = theme.obtainStyledAttributes(intArrayOf(attr, R.attr.flexibleLoadingIndicatorColor))
 
-        return color
+        var colorAccent = typedArray.getColor(0, FALLBACK_COLOR)
+        colorAccent = typedArray.getColor(1, colorAccent)
+        typedArray.recycle()
+        return colorAccent
     }
 }
