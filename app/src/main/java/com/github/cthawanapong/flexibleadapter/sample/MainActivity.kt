@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import com.github.cthawanapong.flexibleadapter.adapter.ShowcaseAdapter
+import com.github.cthawanapong.flexibleadapter.sample.adapter.ShowcaseAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

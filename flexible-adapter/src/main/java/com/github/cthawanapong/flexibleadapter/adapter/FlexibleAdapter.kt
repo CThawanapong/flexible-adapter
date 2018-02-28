@@ -54,21 +54,19 @@ abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<Recy
     private val diffCallback by lazy(LazyThreadSafetyMode.NONE) { DiffCallback() }
     private val onRetryClickListener by lazy { View.OnClickListener { v -> onRetryClick(v) } }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return parent?.let {
-            when (viewType) {
-                VIEW_TYPE_ID_DIVIDER_PADDING -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider_padding, parent, false))
-                VIEW_TYPE_ID_DIVIDER -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider, parent, false))
-                VIEW_TYPE_ID_LOADING -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading, parent, false))
-                VIEW_TYPE_ID_LOADING_ITEM -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading_item, parent, false))
-                VIEW_TYPE_ID_ERROR -> FlexibleErrorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_error, parent, false), onRetryClickListener)
-                VIEW_TYPE_ID_EMPTY -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_empty, parent, false))
-                else -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_empty, parent, false))
-            }
-        } ?: super.createViewHolder(parent, viewType)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_ID_DIVIDER_PADDING -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider_padding, parent, false))
+            VIEW_TYPE_ID_DIVIDER -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider, parent, false))
+            VIEW_TYPE_ID_LOADING -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading, parent, false))
+            VIEW_TYPE_ID_LOADING_ITEM -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading_item, parent, false))
+            VIEW_TYPE_ID_ERROR -> FlexibleErrorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_error, parent, false), onRetryClickListener)
+            VIEW_TYPE_ID_EMPTY -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_empty, parent, false))
+            else -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_empty, parent, false))
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewTypeId = getItemViewType(position)
         val viewType = listViewType[position]
 
