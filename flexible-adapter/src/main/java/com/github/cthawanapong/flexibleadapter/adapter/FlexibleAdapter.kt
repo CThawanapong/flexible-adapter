@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.cthawanapong.flexibleadapter.R
+import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleDividerViewHolder
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleEmptyViewHolder
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleErrorViewHolder
 import com.github.cthawanapong.flexibleadapter.adapter.viewholder.FlexibleLoadingViewHolder
@@ -56,8 +57,8 @@ abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<Recy
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_ID_DIVIDER_PADDING -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider_padding, parent, false))
-            VIEW_TYPE_ID_DIVIDER -> FlexibleEmptyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider, parent, false))
+            VIEW_TYPE_ID_DIVIDER_PADDING -> FlexibleDividerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider_padding, parent, false))
+            VIEW_TYPE_ID_DIVIDER -> FlexibleDividerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_divider, parent, false))
             VIEW_TYPE_ID_LOADING -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading, parent, false))
             VIEW_TYPE_ID_LOADING_ITEM -> FlexibleLoadingViewHolder(context, LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading_item, parent, false))
             VIEW_TYPE_ID_ERROR -> FlexibleErrorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_error, parent, false), onRetryClickListener)
@@ -72,6 +73,9 @@ abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<Recy
 
         when (viewTypeId) {
             VIEW_TYPE_ID_ERROR -> if (holder is FlexibleErrorViewHolder) {
+                holder.bindViewHolder(context)
+            }
+            VIEW_TYPE_ID_EMPTY -> if (holder is FlexibleEmptyViewHolder) {
                 holder.bindViewHolder(context)
             }
         }
