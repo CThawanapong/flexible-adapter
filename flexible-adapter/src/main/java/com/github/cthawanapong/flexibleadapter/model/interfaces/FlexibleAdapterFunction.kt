@@ -17,5 +17,7 @@ interface FlexibleAdapterFunction {
 
     val isError: Boolean
 
+    fun getItem(position: Int): IFlexibleViewType
+
     fun bind(newItemList: List<IFlexibleViewType>)
 }

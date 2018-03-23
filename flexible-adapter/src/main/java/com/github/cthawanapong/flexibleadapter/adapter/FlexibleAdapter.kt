@@ -1,7 +1,7 @@
 package com.github.cthawanapong.flexibleadapter.adapter
 
 import android.content.Context
-import android.support.v7.recyclerview.extensions.ListAdapter
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +15,16 @@ import com.github.cthawanapong.flexibleadapter.model.FlexibleViewType
 import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleAdapterFunction
 import com.github.cthawanapong.flexibleadapter.model.interfaces.FlexibleErrorCallback
 import com.github.cthawanapong.flexibleadapter.model.interfaces.IFlexibleViewType
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.channels.actor
+import kotlinx.coroutines.experimental.launch
 
 /**
  * Created by CThawanapong on 30/1/2018 AD.
  * Email: c.thawanapong@gmail.com
  */
-abstract class FlexibleAdapter(val context: Context) : ListAdapter<IFlexibleViewType, RecyclerView.ViewHolder>(FlexibleItemCallback()), FlexibleAdapterFunction, FlexibleErrorCallback {
+abstract class FlexibleAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FlexibleAdapterFunction, FlexibleErrorCallback {
     companion object {
         @JvmStatic
         private val TAG = FlexibleAdapter::class.java.simpleName
@@ -41,11 +45,14 @@ abstract class FlexibleAdapter(val context: Context) : ListAdapter<IFlexibleView
     protected val VIEW_TYPE_EMPTY = FlexibleViewType(VIEW_TYPE_ID_EMPTY)
     protected val VIEW_TYPE_DIVIDER_PADDING = FlexibleViewType(VIEW_TYPE_ID_DIVIDER_PADDING)
     protected val VIEW_TYPE_DIVIDER = FlexibleViewType(VIEW_TYPE_ID_DIVIDER)
+    protected val listViewType by lazy { mutableListOf<IFlexibleViewType>() }
 
     //Internal Members
-    private var isLoadingShow: Boolean = false
-    private var isErrorShow: Boolean = false
-    private var isEmptyShow: Boolean = false
+    private var isLoadingShow = false
+    private var isErrorShow = false
+    private var isEmptyShow = false
+    private val eventActor by lazy { actor<List<IFlexibleViewType>>(capacity = Channel.CONFLATED) { for (list in channel) internalUpdate(list) } }
+    private val diffCallback by lazy(LazyThreadSafetyMode.NONE) { DiffCallback() }
     private val onRetryClickListener by lazy { View.OnClickListener { v -> onRetryClick(v) } }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -74,11 +81,20 @@ abstract class FlexibleAdapter(val context: Context) : ListAdapter<IFlexibleView
         }
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position).viewTypeId
+    override fun getItemCount(): Int = listViewType.size
+
+    override fun getItemViewType(position: Int): Int = listViewType[position].viewTypeId
+
+    override fun getItem(position: Int): IFlexibleViewType = listViewType[position]
 
     override fun resetAdapter() {
-        submitList(listOf(VIEW_TYPE_LOADING))
-        updateInternalFlag()
+        listViewType.apply {
+            clear()
+            add(VIEW_TYPE_LOADING)
+        }
+
+        notifyDataSetChanged()
+        updateInternalFlag(listViewType)
     }
 
     override fun showLoading() {
@@ -95,21 +111,47 @@ abstract class FlexibleAdapter(val context: Context) : ListAdapter<IFlexibleView
 
     override val isContentEmpty: Boolean
         get() = if (isLoadingShow || isErrorShow || isEmptyShow) {
-            itemCount == 1
+            listViewType.size == 1
         } else {
-            itemCount == 0
+            listViewType.isEmpty()
         }
 
     override val isError: Boolean
         get() = isErrorShow
 
     override fun bind(newItemList: List<IFlexibleViewType>) {
-        submitList(newItemList)
+        if (isContentEmpty) {
+            listViewType.apply {
+                clear()
+                addAll(newItemList)
+            }
+
+            notifyDataSetChanged()
+        } else {
+            eventActor.offer(newItemList)
+        }
     }
 
-    private fun updateInternalFlag() {
-        if (itemCount == 1) {
-            when (getItem(itemCount - 1).viewTypeId) {
+    private suspend fun internalUpdate(newList: List<IFlexibleViewType>) {
+        val oldList = listViewType
+        val result = DiffUtil.calculateDiff(diffCallback.apply {
+            newItemList = newList
+            oldItemList = oldList
+        })
+        updateInternalFlag(newList)
+
+        launch(UI) {
+            result.dispatchUpdatesTo(this@FlexibleAdapter)
+            listViewType.apply {
+                clear()
+                addAll(newList)
+            }
+        }.join()
+    }
+
+    private fun updateInternalFlag(list: List<IFlexibleViewType>) {
+        if (list.size == 1) {
+            when (list.first().viewTypeId) {
                 VIEW_TYPE_ID_LOADING -> {
                     isLoadingShow = true
                     isErrorShow = false
@@ -131,6 +173,20 @@ abstract class FlexibleAdapter(val context: Context) : ListAdapter<IFlexibleView
                     isEmptyShow = false
                 }
             }
+        }
+    }
+
+    private inner class DiffCallback : DiffUtil.Callback() {
+        lateinit var newItemList: List<IFlexibleViewType>
+        lateinit var oldItemList: List<IFlexibleViewType>
+        override fun getOldListSize() = oldItemList.size
+        override fun getNewListSize() = newItemList.size
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItemList[oldItemPosition].areItemsTheSame(newItemList[newItemPosition])
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItemList[oldItemPosition].areContentsTheSame(newItemList[newItemPosition])
         }
     }
 

@@ -18,4 +18,9 @@ class ShowcaseAdapter(context: Context) : FlexibleAdapter(context) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return super.onCreateViewHolder(parent, viewType)
     }
+
+    fun bindAdapter() {
+        bind(listOf(VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM
+                , VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM, VIEW_TYPE_LOADING_ITEM))
+    }
 }
